@@ -1,0 +1,23 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repos
+        uses: actions/checkout@v4
+      - name: Setup .NET Framework
+        uses: microsoft/setup-msbuild@v1
+      - name: Build source
+        run: |
+          dotnet restore source
+          dotnet build source -c Release
+          dotnet publish source -c Release -o artifact/inkbird
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: inkbird
+          path: artifact/inkbird
